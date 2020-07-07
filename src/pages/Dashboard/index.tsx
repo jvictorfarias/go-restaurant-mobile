@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
       const { data } = await api.get<Food[]>('/foods', {
         params: {
           name_like: searchValue,
-          ...(selectedCategory ? { category_like: selectedCategory } : {}),
+          category_like: selectedCategory,
         },
       });
 
@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
         formattedPrice: formatValue(f.price),
       }));
 
-      setFoods(dataFormatted);
+      setFoods([...dataFormatted]);
     }
 
     loadFoods();
@@ -88,9 +88,13 @@ const Dashboard: React.FC = () => {
     loadCategories();
   }, []);
 
-  const handleSelectCategory = useCallback((id: number) => {
-    setSelectedCategory(id);
-  }, []);
+  function handleSelectCategory(id: number): void {
+    if (id === selectedCategory) {
+      setSelectedCategory(undefined);
+    } else {
+      setSelectedCategory(id);
+    }
+  }
 
   return (
     <Container>
